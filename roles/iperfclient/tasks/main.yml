@@ -1,0 +1,10 @@
+---
+ - name: install vim
+   package:
+      name: vim
+      state: latest
+ - name: install iperf
+   package: 
+      name: iperf
+      state: latest
+

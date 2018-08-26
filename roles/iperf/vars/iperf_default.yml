@@ -1,0 +1,4 @@
+---
+server:
+   iperf_default_port: 5001
+   transmission_protocol: u

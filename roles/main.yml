@@ -1,0 +1,38 @@
+---
+- hosts: iperfclients, iperf
+  remote_user: mikko
+  become: yes
+  tasks: 
+    - name: test connection
+      ping:
+    - name: install vim editor
+      package: name=vim state=latest
+    - name: install iperf
+      package: name=iperf state=latest
+    - name: add iperf group
+      group:
+        name: iperf
+        state: present
+    - name: add iper user
+      user:
+        name: iperf
+        group: iperf
+        state: present
+- hosts: iperf
+  vars: 
+    default: {iperf_default_port: 5001, transmission_protocol: "u"} 
+  remote_user: mikko
+  become: yes
+  vars_files:
+    - ./iperf/vars/iperf_default.yml
+  roles: 
+    - iperf 
+  tasks:
+    - debug: msg=" {{default.iperf_default_port}}"    
+    - name: start service with parameters
+      service: 
+        name: iperf
+        state: restarted
+        args:
+         port="{{ default.iperf_default_port }}"
+         "{{default.transmission_protocol }}"

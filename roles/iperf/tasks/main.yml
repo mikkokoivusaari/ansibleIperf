@@ -1,0 +1,33 @@
+---    
+- name: Performing from taskss
+  user: 
+    name: iperf
+    group: iperf
+    state: present
+- name: create configuration file
+  file: 
+    path: /etc/systemd/system/iperf.service
+    owner: iperf
+    group: iperf
+    state: touch
+    mode: 0770
+- name: add content to iperf service fil
+  blockinfile:
+    dest: /etc/systemd/system/iperf.service
+    block: "{{ lookup('file', '/etc/ansible/roles/iperf/templates/iperf.service') }}"
+    backup: yes
+- name: Reload Configuration
+  systemd: 
+    daemon_reload: yes
+- name: start Service
+  systemd: name=iperf state=restarted enabled=yes
+- include_vars: iperf_default.yml
+  name: default
+#- debug: msg=" default port is {{ iperf_default_port }}"
+#- name: check that service is running
+#  service: 
+ #  name: iperf
+ #  state: restarted
+   #  arguments:
+  #    server.iperf_default_port
+ #     server.transmission_protocol

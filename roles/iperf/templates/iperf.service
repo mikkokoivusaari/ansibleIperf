@@ -1,0 +1,12 @@
+[Unit]
+Description= iperf2 Service
+After=network.target
+
+[Service]
+Type=simple
+User=iperf
+ExecStart=/usr/bin/iperf -s -D --pidfile -p $arg1 -$arg2
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
