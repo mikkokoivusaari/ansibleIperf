@@ -1,10 +1,23 @@
 ---
+#First block contains basic stuff for both client and server side
 - hosts: iperfclients, iperf
   remote_user: mikko
   become: yes
   tasks: 
     - name: test connection
       ping:
+    - name: update everything
+      apt:
+        name: "*"
+        state: latest
+        force_apt_get: yes
+    - name: ugrade packages to latest
+      apt:
+        upgrade: dist
+    - name: run apt-get update, if older than day
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
     - name: install iperf
       package: name=iperf state=latest
     - name: add iperf group
@@ -16,6 +29,7 @@
         name: iperf
         group: iperf
         state: present
+#This block contains server tasks which are performed after role tasks
 - hosts: iperf
   vars: 
     default: {iperf_default_port: 5001, transmission_protocol: "u"} 
@@ -27,7 +41,7 @@
     - iperf 
   tasks:
     - debug: msg=" {{default.iperf_default_port}}"    
-    - name: start service with parameters
+    - name: edit service file with parameters
       lineinfile:
        dest: /etc/systemd/system/iperf.service
        state: present
@@ -66,6 +80,7 @@
       command: /bin/true
       notify:
        - restart ssh
+#This is client tasks
 - hosts: iperfclients
   remote_user: mikko
   become: yes
