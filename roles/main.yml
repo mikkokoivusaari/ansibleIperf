@@ -28,12 +28,44 @@
   tasks:
     - debug: msg=" {{default.iperf_default_port}}"    
     - name: start service with parameters
-      service: 
+      lineinfile:
+       dest: /etc/systemd/system/iperf.service
+       state: present
+       regexp: '^ExecStart=/usr/bin/iperf'
+       line: 'ExecStart=/usr/bin/iperf -s -D --pidfile -p {{default.iperf_default_port}} -{{default.transmission_protocol}}'
+    - name: restart iperf service
+      systemd:
         name: iperf
         state: restarted
-        #args:
-        # port="{{ default.iperf_default_port }}"
-        #"{{default.transmission_protocol }}"
+    - name: set permissions on /etc/ssh/sshd_config
+      file: 
+        path: /etc/ssh/sshd_config
+        state: file
+        mode: 0600
+        owner: root
+        group: root
+    - name: disable X11 forward
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        state: present
+        regexp: '^X11Forwarding'
+        line: 'X11Forwarding no'
+    - name: limit ssh auth retries
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        state: present
+        regexp: '^MaxAuthTries'
+        line: 'MaxAuthTries 6'
+    - name: disable ssh root login
+      lineinfile: 
+         dest: /etc/ssh/sshd_config
+         state: present
+         regexp: '^PermitRootLogin'
+         line: 'PermitRootLogin no'
+    - name: restart ssh 
+      command: /bin/true
+      notify:
+       - restart ssh
 - hosts: iperfclients
   remote_user: mikko
   become: yes
