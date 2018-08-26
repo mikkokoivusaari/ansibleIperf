@@ -5,8 +5,6 @@
   tasks: 
     - name: test connection
       ping:
-    - name: install vim editor
-      package: name=vim state=latest
     - name: install iperf
       package: name=iperf state=latest
     - name: add iperf group
@@ -33,6 +31,11 @@
       service: 
         name: iperf
         state: restarted
-        args:
-         port="{{ default.iperf_default_port }}"
-         "{{default.transmission_protocol }}"
+        #args:
+        # port="{{ default.iperf_default_port }}"
+        #"{{default.transmission_protocol }}"
+- hosts: iperfclients
+  remote_user: mikko
+  become: yes
+  roles:
+   - iperfclient

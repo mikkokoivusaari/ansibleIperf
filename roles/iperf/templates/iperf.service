@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=iperf
-ExecStart=/usr/bin/iperf -s -D --pidfile -p $arg1 -$arg2
+ExecStart=/usr/bin/iperf -s -D --pidfile
 Restart=on-abort
 
 [Install]
