@@ -6,6 +6,8 @@ After=network.target
 Type=simple
 User=iperf
 ExecStart=/usr/bin/iperf -s -D --pidfile
+DeviceAllow=/dev/null rw
+PrivateTmp=yes
 Restart=on-abort
 
 [Install]

@@ -32,7 +32,7 @@
 #This block contains server tasks which are performed after role tasks
 - hosts: iperf
   vars: 
-    default: {iperf_default_port: 5001, transmission_protocol: "u"} 
+    default: {iperf_default_port: 5001, transmission_protocol: "u", bandwith: 3} 
   remote_user: mikko
   become: yes
   vars_files:

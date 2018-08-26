@@ -8,4 +8,4 @@
       name: iperf
       state: latest
  - name: test connetion to server
-   command: iperf -c 192.168.1.9 -p 5001 -u
+   command: iperf -c 192.168.1.9 -p 5001 -u -b 3

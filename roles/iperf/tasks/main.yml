@@ -10,7 +10,7 @@
     owner: iperf
     group: iperf
     state: touch
-    mode: 0770
+    mode: 0600
 - name: add content to iperf service fil
   blockinfile:
     dest: /etc/systemd/system/iperf.service
